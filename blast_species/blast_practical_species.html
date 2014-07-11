@@ -318,7 +318,7 @@
 <li><a href="#software-used-in-this-practical">Software used in this practical</a></li>
 </ul></li>
 <li><a href="#exercise">Exercise</a><ul>
-<li><a href="#explore-your-data">Explore your data</a></li>
+<li><a href="#explore-the-data">Explore the data</a></li>
 <li><a href="#blast">BLAST</a></li>
 <li><a href="#download-and-format">Download and Format</a></li>
 <li><a href="#explore-the-tabular-results-using-r">Explore the tabular results using R</a></li>
@@ -341,12 +341,12 @@ Clean the starting dataset
 <h2 id="software-used-in-this-practical">Software used in this practical</h2>
 <ul>
 <li>Linux Shell</li>
-<li>blast_formatter</li>
+<li><a href="http://www.ncbi.nlm.nih.gov/books/NBK1763/" title="BLAST Command Line Applications User Manual">blast_formatter</a></li>
 <li><a href="http://r-project.org/" title="R project home page">R</a></li>
 </ul>
 <h1 id="exercise">Exercise</h1>
-<h2 id="explore-your-data">Explore your data</h2>
-<p>Go to the data directory and have a look of the first lines of the file</p>
+<h2 id="explore-the-data">Explore the data</h2>
+<p>Go to the <a href="data">data directory</a> and have a look of the first lines of the file <a href="data/example.fa">example.fa</a></p>
 <pre><code>cd data
 head example.fa </code></pre>
 <p>It is a standard fasta file. You can find out the number of reads or sequences in the file using the option <code>-c</code> in the grep command</p>
@@ -380,6 +380,7 @@ sed -i &#39;s/&gt;//&#39; myids.txt</code></pre>
 <li>In which of the formats do we have information about the species to which our reads belong to?</li>
 <li>Compare among them the sizes of the files you have downloaded.</li>
 </ul>
+<p><a href="http://youtu.be/2YyokHrkAkQ">Here</a> you can see an example of the upload process.</p>
 <h2 id="download-and-format">Download and Format</h2>
 <p>From the web page you can save just a few of the output formats available in BLAST. The command line function <code>blast_formatter</code> let us download many other, and even customize some of them.</p>
 <p>If you see the help of the command</p>
@@ -419,7 +420,7 @@ Estos campos (del final) devuelven NAs ???
 <h2 id="explore-the-tabular-results-using-r">Explore the tabular results using R</h2>
 <p>Use R to read the files <code>my_tab_blast.txt</code> and <code>my_tab_blast_and_species.txt</code>.</p>
 <p>Merge them and find the <strong>best hit</strong> (the one that maximizes the <em>bit score</em>, provided that the <em>e-value</em> surpasses certain quality threshold) for each read.</p>
-<p>See the file <code>explore_blast_tables.r</code> for details. The output of the script is <a href="explore_blast_tables.html">here</a>.</p>
+<p>See the file <a href="explore_blast_tables.r">explore_blast_tables.r</a> for details. The output of the script is <a href="explore_blast_tables.html">here</a>.</p>
 <h1 id="homework">Homework</h1>
 <p>Find your dataset in the folder <a href="datos">datos</a> and find which are the <strong>tree</strong> species more abundant in it.</p>
 <p>Which are the concentrations of each of them in percentage?</p>
