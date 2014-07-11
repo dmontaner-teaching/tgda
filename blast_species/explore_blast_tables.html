@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta http-equiv="Content-Type" content="text/html; charset=utf-8"/>
+
+<title>Reading blast result tables with R</title>
+
+<!-- Styles for R syntax highlighter -->
+<style type="text/css">
+   pre .operator,
+   pre .paren {
+     color: rgb(104, 118, 135)
+   }
+
+   pre .literal {
+     color: rgb(88, 72, 246)
+   }
+
+   pre .number {
+     color: rgb(0, 0, 205);
+   }
+
+   pre .comment {
+     color: rgb(76, 136, 107);
+   }
+
+   pre .keyword {
+     color: rgb(0, 0, 255);
+   }
+
+   pre .identifier {
+     color: rgb(0, 0, 0);
+   }
+
+   pre .string {
+     color: rgb(3, 106, 7);
+   }
+</style>
+
+<!-- R syntax highlighter -->
+<script type="text/javascript">
+var hljs=new function(){function m(p){return p.replace(/&/gm,"&amp;").replace(/</gm,"&lt;")}function f(r,q,p){return RegExp(q,"m"+(r.cI?"i":"")+(p?"g":""))}function b(r){for(var p=0;p<r.childNodes.length;p++){var q=r.childNodes[p];if(q.nodeName=="CODE"){return q}if(!(q.nodeType==3&&q.nodeValue.match(/\s+/))){break}}}function h(t,s){var p="";for(var r=0;r<t.childNodes.length;r++){if(t.childNodes[r].nodeType==3){var q=t.childNodes[r].nodeValue;if(s){q=q.replace(/\n/g,"")}p+=q}else{if(t.childNodes[r].nodeName=="BR"){p+="\n"}else{p+=h(t.childNodes[r])}}}if(/MSIE [678]/.test(navigator.userAgent)){p=p.replace(/\r/g,"\n")}return p}function a(s){var r=s.className.split(/\s+/);r=r.concat(s.parentNode.className.split(/\s+/));for(var q=0;q<r.length;q++){var p=r[q].replace(/^language-/,"");if(e[p]){return p}}}function c(q){var p=[];(function(s,t){for(var r=0;r<s.childNodes.length;r++){if(s.childNodes[r].nodeType==3){t+=s.childNodes[r].nodeValue.length}else{if(s.childNodes[r].nodeName=="BR"){t+=1}else{if(s.childNodes[r].nodeType==1){p.push({event:"start",offset:t,node:s.childNodes[r]});t=arguments.callee(s.childNodes[r],t);p.push({event:"stop",offset:t,node:s.childNodes[r]})}}}}return t})(q,0);return p}function k(y,w,x){var q=0;var z="";var s=[];function u(){if(y.length&&w.length){if(y[0].offset!=w[0].offset){return(y[0].offset<w[0].offset)?y:w}else{return w[0].event=="start"?y:w}}else{return y.length?y:w}}function t(D){var A="<"+D.nodeName.toLowerCase();for(var B=0;B<D.attributes.length;B++){var C=D.attributes[B];A+=" "+C.nodeName.toLowerCase();if(C.value!==undefined&&C.value!==false&&C.value!==null){A+='="'+m(C.value)+'"'}}return A+">"}while(y.length||w.length){var v=u().splice(0,1)[0];z+=m(x.substr(q,v.offset-q));q=v.offset;if(v.event=="start"){z+=t(v.node);s.push(v.node)}else{if(v.event=="stop"){var p,r=s.length;do{r--;p=s[r];z+=("</"+p.nodeName.toLowerCase()+">")}while(p!=v.node);s.splice(r,1);while(r<s.length){z+=t(s[r]);r++}}}}return z+m(x.substr(q))}function j(){function q(x,y,v){if(x.compiled){return}var u;var s=[];if(x.k){x.lR=f(y,x.l||hljs.IR,true);for(var w in x.k){if(!x.k.hasOwnProperty(w)){continue}if(x.k[w] instanceof Object){u=x.k[w]}else{u=x.k;w="keyword"}for(var r in u){if(!u.hasOwnProperty(r)){continue}x.k[r]=[w,u[r]];s.push(r)}}}if(!v){if(x.bWK){x.b="\\b("+s.join("|")+")\\s"}x.bR=f(y,x.b?x.b:"\\B|\\b");if(!x.e&&!x.eW){x.e="\\B|\\b"}if(x.e){x.eR=f(y,x.e)}}if(x.i){x.iR=f(y,x.i)}if(x.r===undefined){x.r=1}if(!x.c){x.c=[]}x.compiled=true;for(var t=0;t<x.c.length;t++){if(x.c[t]=="self"){x.c[t]=x}q(x.c[t],y,false)}if(x.starts){q(x.starts,y,false)}}for(var p in e){if(!e.hasOwnProperty(p)){continue}q(e[p].dM,e[p],true)}}function d(B,C){if(!j.called){j();j.called=true}function q(r,M){for(var L=0;L<M.c.length;L++){if((M.c[L].bR.exec(r)||[null])[0]==r){return M.c[L]}}}function v(L,r){if(D[L].e&&D[L].eR.test(r)){return 1}if(D[L].eW){var M=v(L-1,r);return M?M+1:0}return 0}function w(r,L){return L.i&&L.iR.test(r)}function K(N,O){var M=[];for(var L=0;L<N.c.length;L++){M.push(N.c[L].b)}var r=D.length-1;do{if(D[r].e){M.push(D[r].e)}r--}while(D[r+1].eW);if(N.i){M.push(N.i)}return f(O,M.join("|"),true)}function p(M,L){var N=D[D.length-1];if(!N.t){N.t=K(N,E)}N.t.lastIndex=L;var r=N.t.exec(M);return r?[M.substr(L,r.index-L),r[0],false]:[M.substr(L),"",true]}function z(N,r){var L=E.cI?r[0].toLowerCase():r[0];var M=N.k[L];if(M&&M instanceof Array){return M}return false}function F(L,P){L=m(L);if(!P.k){return L}var r="";var O=0;P.lR.lastIndex=0;var M=P.lR.exec(L);while(M){r+=L.substr(O,M.index-O);var N=z(P,M);if(N){x+=N[1];r+='<span class="'+N[0]+'">'+M[0]+"</span>"}else{r+=M[0]}O=P.lR.lastIndex;M=P.lR.exec(L)}return r+L.substr(O,L.length-O)}function J(L,M){if(M.sL&&e[M.sL]){var r=d(M.sL,L);x+=r.keyword_count;return r.value}else{return F(L,M)}}function I(M,r){var L=M.cN?'<span class="'+M.cN+'">':"";if(M.rB){y+=L;M.buffer=""}else{if(M.eB){y+=m(r)+L;M.buffer=""}else{y+=L;M.buffer=r}}D.push(M);A+=M.r}function G(N,M,Q){var R=D[D.length-1];if(Q){y+=J(R.buffer+N,R);return false}var P=q(M,R);if(P){y+=J(R.buffer+N,R);I(P,M);return P.rB}var L=v(D.length-1,M);if(L){var O=R.cN?"</span>":"";if(R.rE){y+=J(R.buffer+N,R)+O}else{if(R.eE){y+=J(R.buffer+N,R)+O+m(M)}else{y+=J(R.buffer+N+M,R)+O}}while(L>1){O=D[D.length-2].cN?"</span>":"";y+=O;L--;D.length--}var r=D[D.length-1];D.length--;D[D.length-1].buffer="";if(r.starts){I(r.starts,"")}return R.rE}if(w(M,R)){throw"Illegal"}}var E=e[B];var D=[E.dM];var A=0;var x=0;var y="";try{var s,u=0;E.dM.buffer="";do{s=p(C,u);var t=G(s[0],s[1],s[2]);u+=s[0].length;if(!t){u+=s[1].length}}while(!s[2]);if(D.length>1){throw"Illegal"}return{r:A,keyword_count:x,value:y}}catch(H){if(H=="Illegal"){return{r:0,keyword_count:0,value:m(C)}}else{throw H}}}function g(t){var p={keyword_count:0,r:0,value:m(t)};var r=p;for(var q in e){if(!e.hasOwnProperty(q)){continue}var s=d(q,t);s.language=q;if(s.keyword_count+s.r>r.keyword_count+r.r){r=s}if(s.keyword_count+s.r>p.keyword_count+p.r){r=p;p=s}}if(r.language){p.second_best=r}return p}function i(r,q,p){if(q){r=r.replace(/^((<[^>]+>|\t)+)/gm,function(t,w,v,u){return w.replace(/\t/g,q)})}if(p){r=r.replace(/\n/g,"<br>")}return r}function n(t,w,r){var x=h(t,r);var v=a(t);var y,s;if(v){y=d(v,x)}else{return}var q=c(t);if(q.length){s=document.createElement("pre");s.innerHTML=y.value;y.value=k(q,c(s),x)}y.value=i(y.value,w,r);var u=t.className;if(!u.match("(\\s|^)(language-)?"+v+"(\\s|$)")){u=u?(u+" "+v):v}if(/MSIE [678]/.test(navigator.userAgent)&&t.tagName=="CODE"&&t.parentNode.tagName=="PRE"){s=t.parentNode;var p=document.createElement("div");p.innerHTML="<pre><code>"+y.value+"</code></pre>";t=p.firstChild.firstChild;p.firstChild.cN=s.cN;s.parentNode.replaceChild(p.firstChild,s)}else{t.innerHTML=y.value}t.className=u;t.result={language:v,kw:y.keyword_count,re:y.r};if(y.second_best){t.second_best={language:y.second_best.language,kw:y.second_best.keyword_count,re:y.second_best.r}}}function o(){if(o.called){return}o.called=true;var r=document.getElementsByTagName("pre");for(var p=0;p<r.length;p++){var q=b(r[p]);if(q){n(q,hljs.tabReplace)}}}function l(){if(window.addEventListener){window.addEventListener("DOMContentLoaded",o,false);window.addEventListener("load",o,false)}else{if(window.attachEvent){window.attachEvent("onload",o)}else{window.onload=o}}}var e={};this.LANGUAGES=e;this.highlight=d;this.highlightAuto=g;this.fixMarkup=i;this.highlightBlock=n;this.initHighlighting=o;this.initHighlightingOnLoad=l;this.IR="[a-zA-Z][a-zA-Z0-9_]*";this.UIR="[a-zA-Z_][a-zA-Z0-9_]*";this.NR="\\b\\d+(\\.\\d+)?";this.CNR="\\b(0[xX][a-fA-F0-9]+|(\\d+(\\.\\d*)?|\\.\\d+)([eE][-+]?\\d+)?)";this.BNR="\\b(0b[01]+)";this.RSR="!|!=|!==|%|%=|&|&&|&=|\\*|\\*=|\\+|\\+=|,|\\.|-|-=|/|/=|:|;|<|<<|<<=|<=|=|==|===|>|>=|>>|>>=|>>>|>>>=|\\?|\\[|\\{|\\(|\\^|\\^=|\\||\\|=|\\|\\||~";this.ER="(?![\\s\\S])";this.BE={b:"\\\\.",r:0};this.ASM={cN:"string",b:"'",e:"'",i:"\\n",c:[this.BE],r:0};this.QSM={cN:"string",b:'"',e:'"',i:"\\n",c:[this.BE],r:0};this.CLCM={cN:"comment",b:"//",e:"$"};this.CBLCLM={cN:"comment",b:"/\\*",e:"\\*/"};this.HCM={cN:"comment",b:"#",e:"$"};this.NM={cN:"number",b:this.NR,r:0};this.CNM={cN:"number",b:this.CNR,r:0};this.BNM={cN:"number",b:this.BNR,r:0};this.inherit=function(r,s){var p={};for(var q in r){p[q]=r[q]}if(s){for(var q in s){p[q]=s[q]}}return p}}();hljs.LANGUAGES.cpp=function(){var a={keyword:{"false":1,"int":1,"float":1,"while":1,"private":1,"char":1,"catch":1,"export":1,virtual:1,operator:2,sizeof:2,dynamic_cast:2,typedef:2,const_cast:2,"const":1,struct:1,"for":1,static_cast:2,union:1,namespace:1,unsigned:1,"long":1,"throw":1,"volatile":2,"static":1,"protected":1,bool:1,template:1,mutable:1,"if":1,"public":1,friend:2,"do":1,"return":1,"goto":1,auto:1,"void":2,"enum":1,"else":1,"break":1,"new":1,extern:1,using:1,"true":1,"class":1,asm:1,"case":1,typeid:1,"short":1,reinterpret_cast:2,"default":1,"double":1,register:1,explicit:1,signed:1,typename:1,"try":1,"this":1,"switch":1,"continue":1,wchar_t:1,inline:1,"delete":1,alignof:1,char16_t:1,char32_t:1,constexpr:1,decltype:1,noexcept:1,nullptr:1,static_assert:1,thread_local:1,restrict:1,_Bool:1,complex:1},built_in:{std:1,string:1,cin:1,cout:1,cerr:1,clog:1,stringstream:1,istringstream:1,ostringstream:1,auto_ptr:1,deque:1,list:1,queue:1,stack:1,vector:1,map:1,set:1,bitset:1,multiset:1,multimap:1,unordered_set:1,unordered_map:1,unordered_multiset:1,unordered_multimap:1,array:1,shared_ptr:1}};return{dM:{k:a,i:"</",c:[hljs.CLCM,hljs.CBLCLM,hljs.QSM,{cN:"string",b:"'\\\\?.",e:"'",i:"."},{cN:"number",b:"\\b(\\d+(\\.\\d*)?|\\.\\d+)(u|U|l|L|ul|UL|f|F)"},hljs.CNM,{cN:"preprocessor",b:"#",e:"$"},{cN:"stl_container",b:"\\b(deque|list|queue|stack|vector|map|set|bitset|multiset|multimap|unordered_map|unordered_set|unordered_multiset|unordered_multimap|array)\\s*<",e:">",k:a,r:10,c:["self"]}]}}}();hljs.LANGUAGES.r={dM:{c:[hljs.HCM,{cN:"number",b:"\\b0[xX][0-9a-fA-F]+[Li]?\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\b\\d+(?:[eE][+\\-]?\\d*)?L\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\b\\d+\\.(?!\\d)(?:i\\b)?",e:hljs.IMMEDIATE_RE,r:1},{cN:"number",b:"\\b\\d+(?:\\.\\d*)?(?:[eE][+\\-]?\\d*)?i?\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"number",b:"\\.\\d+(?:[eE][+\\-]?\\d*)?i?\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"keyword",b:"(?:tryCatch|library|setGeneric|setGroupGeneric)\\b",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\.\\.\\.",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\.\\.\\d+(?![\\w.])",e:hljs.IMMEDIATE_RE,r:10},{cN:"keyword",b:"\\b(?:function)",e:hljs.IMMEDIATE_RE,r:2},{cN:"keyword",b:"(?:if|in|break|next|repeat|else|for|return|switch|while|try|stop|warning|require|attach|detach|source|setMethod|setClass)\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"literal",b:"(?:NA|NA_integer_|NA_real_|NA_character_|NA_complex_)\\b",e:hljs.IMMEDIATE_RE,r:10},{cN:"literal",b:"(?:NULL|TRUE|FALSE|T|F|Inf|NaN)\\b",e:hljs.IMMEDIATE_RE,r:1},{cN:"identifier",b:"[a-zA-Z.][a-zA-Z0-9._]*\\b",e:hljs.IMMEDIATE_RE,r:0},{cN:"operator",b:"<\\-(?!\\s*\\d)",e:hljs.IMMEDIATE_RE,r:2},{cN:"operator",b:"\\->|<\\-",e:hljs.IMMEDIATE_RE,r:1},{cN:"operator",b:"%%|~",e:hljs.IMMEDIATE_RE},{cN:"operator",b:">=|<=|==|!=|\\|\\||&&|=|\\+|\\-|\\*|/|\\^|>|<|!|&|\\||\\$|:",e:hljs.IMMEDIATE_RE,r:0},{cN:"operator",b:"%",e:"%",i:"\\n",r:1},{cN:"identifier",b:"`",e:"`",r:0},{cN:"string",b:'"',e:'"',c:[hljs.BE],r:0},{cN:"string",b:"'",e:"'",c:[hljs.BE],r:0},{cN:"paren",b:"[[({\\])}]",e:hljs.IMMEDIATE_RE,r:0}]}};
+hljs.initHighlightingOnLoad();
+</script>
+
+<!-- MathJax scripts -->
+<script type="text/javascript" src="https://c328740.ssl.cf1.rackcdn.com/mathjax/2.0-latest/MathJax.js?config=TeX-AMS-MML_HTMLorMML">
+</script>
+
+
+<style type="text/css">
+body, td {
+   font-family: sans-serif;
+   background-color: white;
+   font-size: 12px;
+   margin: 8px;
+}
+
+tt, code, pre {
+   font-family: 'DejaVu Sans Mono', 'Droid Sans Mono', 'Lucida Console', Consolas, Monaco, monospace;
+}
+
+h1 { 
+   font-size:2.2em; 
+}
+
+h2 { 
+   font-size:1.8em; 
+}
+
+h3 { 
+   font-size:1.4em; 
+}
+
+h4 { 
+   font-size:1.0em; 
+}
+
+h5 { 
+   font-size:0.9em; 
+}
+
+h6 { 
+   font-size:0.8em; 
+}
+
+a:visited {
+   color: rgb(50%, 0%, 50%);
+}
+
+pre {	
+   margin-top: 0;
+   max-width: 95%;
+   border: 1px solid #ccc;
+   white-space: pre-wrap;
+}
+
+pre code {
+   display: block; padding: 0.5em;
+}
+
+code.r, code.cpp {
+   background-color: #F8F8F8;
+}
+
+table, td, th {
+  border: none;
+}
+
+blockquote {
+   color:#666666;
+   margin:0;
+   padding-left: 1em;
+   border-left: 0.5em #EEE solid;
+}
+
+hr {
+   height: 0px;
+   border-bottom: none;
+   border-top-width: thin;
+   border-top-style: dotted;
+   border-top-color: #999999;
+}
+
+@media print {
+   * { 
+      background: transparent !important; 
+      color: black !important; 
+      filter:none !important; 
+      -ms-filter: none !important; 
+   }
+
+   body { 
+      font-size:12pt; 
+      max-width:100%; 
+   }
+       
+   a, a:visited { 
+      text-decoration: underline; 
+   }
+
+   hr { 
+      visibility: hidden;
+      page-break-before: always;
+   }
+
+   pre, blockquote { 
+      padding-right: 1em; 
+      page-break-inside: avoid; 
+   }
+
+   tr, img { 
+      page-break-inside: avoid; 
+   }
+
+   img { 
+      max-width: 100% !important; 
+   }
+
+   @page :left { 
+      margin: 15mm 20mm 15mm 10mm; 
+   }
+     
+   @page :right { 
+      margin: 15mm 10mm 15mm 20mm; 
+   }
+
+   p, h2, h3 { 
+      orphans: 3; widows: 3; 
+   }
+
+   h2, h3 { 
+      page-break-after: avoid; 
+   }
+}
+</style>
+
+
+
+</head>
+
+<body>
+<h1>Reading blast result tables with R</h1>
+
+<p><a href="http://www.dmontaner.com" title="my home page">David Montaner</a> <em>(2014-04-07)</em>  </p>
+
+<p>The script shows some commands to explore BLAST results in tabular format.</p>
+
+<hr/>
+
+<pre><code class="r"># rm (list = ls ())
+</code></pre>
+
+<p>Set the working directory</p>
+
+<pre><code class="r"># setwd (&#39;data&#39;) dir ()
+
+dir(&quot;data&quot;)
+</code></pre>
+
+<pre><code>&gt; [1] &quot;example.fa&quot;                   &quot;explore_blast_tables.html&quot;   
+&gt; [3] &quot;explore_blast_tables.md&quot;      &quot;my_tab_blast_and_species.txt&quot;
+&gt; [5] &quot;my_tab_blast.txt&quot;             &quot;myids.txt&quot;
+</code></pre>
+
+<h2>Read the first table</h2>
+
+<pre><code class="r">datos1 &lt;- read.table(file = &quot;data/my_tab_blast.txt&quot;, header = FALSE, sep = &quot;\t&quot;, 
+    quote = &quot;&quot;, as.is = TRUE)
+dim(datos1)
+</code></pre>
+
+<pre><code>&gt; [1] 10774    12
+</code></pre>
+
+<pre><code class="r">datos1[1:3, ]
+</code></pre>
+
+<pre><code>&gt;      V1                               V2     V3 V4 V5 V6 V7 V8   V9  V10
+&gt; 1  9312 gi|528520364|ref|XM_001337519.3|  98.89 90  1  0  1 90 1302 1391
+&gt; 2 27256 gi|528475849|ref|XM_005164514.1| 100.00 90  0  0  1 90 3924 4013
+&gt; 3 27256 gi|528475847|ref|XM_005164513.1| 100.00 90  0  0  1 90 3930 4019
+&gt;     V11 V12
+&gt; 1 7e-37 161
+&gt; 2 1e-38 167
+&gt; 3 1e-38 167
+</code></pre>
+
+<pre><code class="r">sapply(datos1, class)  ## classes of the variables 
+</code></pre>
+
+<pre><code>&gt;          V1          V2          V3          V4          V5          V6 
+&gt;   &quot;integer&quot; &quot;character&quot;   &quot;numeric&quot;   &quot;integer&quot;   &quot;integer&quot;   &quot;integer&quot; 
+&gt;          V7          V8          V9         V10         V11         V12 
+&gt;   &quot;integer&quot;   &quot;integer&quot;   &quot;integer&quot;   &quot;integer&quot;   &quot;numeric&quot;   &quot;numeric&quot;
+</code></pre>
+
+<p>We know the meaning of each of the columns form the documentation</p>
+
+<pre><code class="r">colnames(datos1) &lt;- c(&quot;queryID&quot;, &quot;subjectIDs&quot;, &quot;identity.percent&quot;, &quot;alignment.length&quot;, 
+    &quot;mismatches&quot;, &quot;gap.opens&quot;, &quot;q.start&quot;, &quot;q.end&quot;, &quot;s.start&quot;, &quot;s.end&quot;, &quot;evalue&quot;, 
+    &quot;bit.score&quot;)
+datos1[1:3, ]
+</code></pre>
+
+<pre><code>&gt;   queryID                       subjectIDs identity.percent
+&gt; 1    9312 gi|528520364|ref|XM_001337519.3|            98.89
+&gt; 2   27256 gi|528475849|ref|XM_005164514.1|           100.00
+&gt; 3   27256 gi|528475847|ref|XM_005164513.1|           100.00
+&gt;   alignment.length mismatches gap.opens q.start q.end s.start s.end evalue
+&gt; 1               90          1         0       1    90    1302  1391  7e-37
+&gt; 2               90          0         0       1    90    3924  4013  1e-38
+&gt; 3               90          0         0       1    90    3930  4019  1e-38
+&gt;   bit.score
+&gt; 1       161
+&gt; 2       167
+&gt; 3       167
+</code></pre>
+
+<p>Find out the number of sequences which where blasted,</p>
+
+<pre><code class="r">unicos &lt;- unique(datos1[, &quot;queryID&quot;])
+unicos[1:3]
+</code></pre>
+
+<pre><code>&gt; [1]  9312 27256 11283
+</code></pre>
+
+<pre><code class="r">length(unicos)
+</code></pre>
+
+<pre><code>&gt; [1] 293
+</code></pre>
+
+<p>Some of our original reads or sequences may not have a blast hit,
+lets find them.</p>
+
+<p>First we will read the original IDs extracted from the fasta file</p>
+
+<pre><code class="r">ids &lt;- readLines(&quot;data/myids.txt&quot;)
+ids[1:3]
+</code></pre>
+
+<pre><code>&gt; [1] &quot;9312&quot;  &quot;27256&quot; &quot;11283&quot;
+</code></pre>
+
+<pre><code class="r">length(ids)
+</code></pre>
+
+<pre><code>&gt; [1] 300
+</code></pre>
+
+<p>As expected, all the IDs in the blast results are in the fasta file:</p>
+
+<pre><code class="r">table(unicos %in% ids)
+</code></pre>
+
+<pre><code>&gt; 
+&gt; TRUE 
+&gt;  293
+</code></pre>
+
+<p>but some original ids are not in the blast output</p>
+
+<pre><code class="r">setdiff(ids, unicos)
+</code></pre>
+
+<pre><code>&gt; [1] &quot;15614&quot; &quot;2738&quot;  &quot;28793&quot; &quot;4311&quot;  &quot;1437&quot;  &quot;311&quot;   &quot;4605&quot;
+</code></pre>
+
+<p>We can count how may hits does it have every sequence</p>
+
+<pre><code class="r">counts &lt;- table(datos1[, &quot;queryID&quot;])
+counts[1:3]
+</code></pre>
+
+<pre><code>&gt; 
+&gt; 17 64 77 
+&gt; 23  1 26
+</code></pre>
+
+<pre><code class="r">
+suma &lt;- sum(counts[1:3])
+suma
+</code></pre>
+
+<pre><code>&gt; [1] 50
+</code></pre>
+
+<p>Be careful as table rearranges its output.</p>
+
+<pre><code class="r">datos1[1:suma, 1:2]
+</code></pre>
+
+<pre><code>&gt;    queryID                       subjectIDs
+&gt; 1     9312 gi|528520364|ref|XM_001337519.3|
+&gt; 2    27256 gi|528475849|ref|XM_005164514.1|
+&gt; 3    27256 gi|528475847|ref|XM_005164513.1|
+&gt; 4    27256 gi|528475845|ref|XM_005164512.1|
+&gt; 5    27256     gi|42415098|emb|BX324164.15|
+&gt; 6    11283 gi|528510266|ref|XM_005159670.1|
+&gt; 7    11283 gi|528510264|ref|XM_003200619.2|
+&gt; 8    11283 gi|528510262|ref|XM_005159669.1|
+&gt; 9    11283 gi|528510260|ref|XM_005159668.1|
+&gt; 10   11283 gi|528510258|ref|XM_005159667.1|
+&gt; 11   11283 gi|528510256|ref|XM_005159666.1|
+&gt; 12   11283 gi|528510254|ref|XM_005159665.1|
+&gt; 13   11283      gi|50080092|emb|BX511004.9|
+&gt; 14   27167      gi|94384518|emb|CR396590.9|
+&gt; 15   11135 gi|528514418|ref|XM_005161444.1|
+&gt; 16   11135    gi|156447403|emb|CU302322.12|
+&gt; 17   11135 gi|114326247|ref|NM_001048064.1|
+&gt; 18   11135     gi|34366544|emb|BX004995.15|
+&gt; 19   11949      gi|94384518|emb|CR396590.9|
+&gt; 20   21560      gi|94384518|emb|CR396590.9|
+&gt; 21    6129      gi|94384518|emb|CR396590.9|
+&gt; 22    6129      gi|94384518|emb|CR396590.9|
+&gt; 23    6129 gi|528492902|ref|XM_001920721.2|
+&gt; 24    6129      gi|30230940|emb|AL953903.8|
+&gt; 25    6129      gi|30230940|emb|AL953903.8|
+&gt; 26    6129      gi|30230940|emb|AL953903.8|
+&gt; 27    6129 gi|528492954|ref|XM_002663633.2|
+&gt; 28    6129 gi|528492944|ref|XM_002663628.2|
+&gt; 29    6129 gi|528492942|ref|XM_001342096.3|
+&gt; 30    6129      gi|90399826|emb|CR925820.5|
+&gt; 31    6129      gi|90399826|emb|CR925820.5|
+&gt; 32    6129      gi|90399826|emb|CR925820.5|
+&gt; 33    6129      gi|90399826|emb|CR925820.5|
+&gt; 34    6129      gi|90399826|emb|CR925820.5|
+&gt; 35    6129      gi|90399826|emb|CR925820.5|
+&gt; 36    6129      gi|90399826|emb|CR925820.5|
+&gt; 37    6129      gi|90399826|emb|CR925820.5|
+&gt; 38    6129      gi|45581093|emb|BX530037.7|
+&gt; 39    6129      gi|45581093|emb|BX530037.7|
+&gt; 40    6129      gi|45581093|emb|BX530037.7|
+&gt; 41    6129      gi|45581093|emb|BX530037.7|
+&gt; 42    6129      gi|45581093|emb|BX530037.7|
+&gt; 43    6129      gi|45581093|emb|BX530037.7|
+&gt; 44    6129      gi|45581093|emb|BX530037.7|
+&gt; 45    6129    gi|528492904|ref|XR_084325.2|
+&gt; 46    6129 gi|528492946|ref|XM_002663629.2|
+&gt; 47    6129 gi|125828377|ref|XM_001342220.1|
+&gt; 48    6980      gi|94384518|emb|CR396590.9|
+&gt; 49    6980      gi|94384518|emb|CR396590.9|
+&gt; 50    6980 gi|528492902|ref|XM_001920721.2|
+</code></pre>
+
+<p>To make the proper selection</p>
+
+<pre><code class="r">touse &lt;- datos1[, &quot;queryID&quot;] %in% names(counts[1:3])
+table(touse)
+</code></pre>
+
+<pre><code>&gt; touse
+&gt; FALSE  TRUE 
+&gt; 10724    50
+</code></pre>
+
+<pre><code class="r">which(touse)  ##these are the positions
+</code></pre>
+
+<pre><code>&gt;  [1]   104  8997  8998  8999  9000  9001  9002  9003  9004  9005  9006
+&gt; [12]  9007  9008  9009  9010  9011  9012  9013  9014  9015  9016  9017
+&gt; [23]  9018  9019  9020  9021  9022 10579 10580 10581 10582 10583 10584
+&gt; [34] 10585 10586 10587 10588 10589 10590 10591 10592 10593 10594 10595
+&gt; [45] 10596 10597 10598 10599 10600 10601
+</code></pre>
+
+<pre><code class="r">
+datos1[touse, 1:2]
+</code></pre>
+
+<pre><code>&gt;       queryID                       subjectIDs
+&gt; 104        64      gi|94384518|emb|CR396590.9|
+&gt; 8997       77    gi|133893139|ref|NM_024254.3|
+&gt; 8998       77       gi|15214556|gb|BC012402.1|
+&gt; 8999       77       gi|13096839|gb|BC003216.1|
+&gt; 9000       77      gi|74219818|dbj|AK168639.1|
+&gt; 9001       77      gi|74193289|dbj|AK151464.1|
+&gt; 9002       77      gi|74181338|dbj|AK150905.1|
+&gt; 9003       77      gi|26331753|dbj|AK036861.1|
+&gt; 9004       77      gi|12846253|dbj|AK010654.1|
+&gt; 9005       77     gi|83318690|emb|CT009635.18|
+&gt; 9006       77       gi|57863218|gb|AC154679.2|
+&gt; 9007       77       gi|51593582|gb|BC080661.1|
+&gt; 9008       77      gi|74220288|dbj|AK152570.1|
+&gt; 9009       77 gi|564342251|ref|XM_006234712.1|
+&gt; 9010       77 gi|172354613|ref|NM_001109645.2|
+&gt; 9011       77 gi|589960284|ref|XM_006992658.1|
+&gt; 9012       77 gi|354482903|ref|XM_003503587.1|
+&gt; 9013       77 gi|532042915|ref|XM_005364230.1|
+&gt; 9014       77 gi|524921123|ref|XM_005064776.1|
+&gt; 9015       77      gi|23894529|emb|AL683897.5|
+&gt; 9016       77 gi|507695521|ref|XM_004643128.1|
+&gt; 9017       77 gi|507578150|ref|XM_004672540.1|
+&gt; 9018       77 gi|533132406|ref|XM_005381162.1|
+&gt; 9019       77 gi|533132404|ref|XM_005381161.1|
+&gt; 9020       77 gi|533132402|ref|XM_005381160.1|
+&gt; 9021       77 gi|533132400|ref|XM_005381159.1|
+&gt; 9022       77     gi|298916388|emb|FQ219931.1|
+&gt; 10579      17     gi|83318690|emb|CT009635.18|
+&gt; 10580      17       gi|57863218|gb|AC154679.2|
+&gt; 10581      17    gi|133893139|ref|NM_024254.3|
+&gt; 10582      17       gi|15214556|gb|BC012402.1|
+&gt; 10583      17       gi|13096839|gb|BC003216.1|
+&gt; 10584      17      gi|74220288|dbj|AK152570.1|
+&gt; 10585      17      gi|74219818|dbj|AK168639.1|
+&gt; 10586      17      gi|74193289|dbj|AK151464.1|
+&gt; 10587      17      gi|74181338|dbj|AK150905.1|
+&gt; 10588      17      gi|26331753|dbj|AK036861.1|
+&gt; 10589      17      gi|12846253|dbj|AK010654.1|
+&gt; 10590      17       gi|51593582|gb|BC080661.1|
+&gt; 10591      17 gi|532042915|ref|XM_005364230.1|
+&gt; 10592      17      gi|23894529|emb|AL683897.5|
+&gt; 10593      17 gi|298104086|ref|NM_001190181.1|
+&gt; 10594      17     gi|115550703|dbj|AK235777.1|
+&gt; 10595      17 gi|560958417|ref|XM_006201607.1|
+&gt; 10596      17 gi|511956624|ref|XM_004796563.1|
+&gt; 10597      17 gi|511956622|ref|XM_004796562.1|
+&gt; 10598      17 gi|511956620|ref|XM_004796561.1|
+&gt; 10599      17 gi|511854269|ref|XM_004751021.1|
+&gt; 10600      17 gi|511854266|ref|XM_004751020.1|
+&gt; 10601      17 gi|558100869|ref|XM_006082958.1|
+</code></pre>
+
+<h2>Read the second table</h2>
+
+<pre><code class="r">datos2 &lt;- read.table(file = &quot;data/my_tab_blast_and_species.txt&quot;, header = FALSE, 
+    sep = &quot;\t&quot;, quote = &quot;&quot;, as.is = TRUE)
+dim(datos2)
+</code></pre>
+
+<pre><code>&gt; [1] 10774     5
+</code></pre>
+
+<pre><code class="r">datos2[1:3, ]
+</code></pre>
+
+<pre><code>&gt;      V1        V2           V3             V4   V5
+&gt; 1  9312 528520364 XM_001337519 XM_001337519.3 7955
+&gt; 2 27256 528475849 XM_005164514 XM_005164514.1 7955
+&gt; 3 27256 528475847 XM_005164513 XM_005164513.1 7955
+</code></pre>
+
+<pre><code class="r">sapply(datos2, class)  ## classes of the variables 
+</code></pre>
+
+<pre><code>&gt;          V1          V2          V3          V4          V5 
+&gt;   &quot;integer&quot;   &quot;integer&quot; &quot;character&quot; &quot;character&quot;   &quot;integer&quot;
+</code></pre>
+
+<p>Set the row names </p>
+
+<pre><code class="r">colnames(datos2) &lt;- c(&quot;qseqid&quot;, &quot;sgi&quot;, &quot;sacc&quot;, &quot;saccver&quot;, &quot;staxids&quot;)
+datos2[1:3, ]
+</code></pre>
+
+<pre><code>&gt;   qseqid       sgi         sacc        saccver staxids
+&gt; 1   9312 528520364 XM_001337519 XM_001337519.3    7955
+&gt; 2  27256 528475849 XM_005164514 XM_005164514.1    7955
+&gt; 3  27256 528475847 XM_005164513 XM_005164513.1    7955
+</code></pre>
+
+<p>Check that the two datasets are arranged in the same order</p>
+
+<pre><code class="r">table(datos1$queryID == datos2$qseqid)
+</code></pre>
+
+<pre><code>&gt; 
+&gt;  TRUE 
+&gt; 10774
+</code></pre>
+
+<p>The rows of the two datasets are in the same order. We can then combine them in a unique data.frame:</p>
+
+<pre><code class="r">datos &lt;- cbind(datos1, datos2)
+class(datos)
+</code></pre>
+
+<pre><code>&gt; [1] &quot;data.frame&quot;
+</code></pre>
+
+<pre><code class="r">dim(datos)
+</code></pre>
+
+<pre><code>&gt; [1] 10774    17
+</code></pre>
+
+<pre><code class="r">sapply(datos, class)
+</code></pre>
+
+<pre><code>&gt;          queryID       subjectIDs identity.percent alignment.length 
+&gt;        &quot;integer&quot;      &quot;character&quot;        &quot;numeric&quot;        &quot;integer&quot; 
+&gt;       mismatches        gap.opens          q.start            q.end 
+&gt;        &quot;integer&quot;        &quot;integer&quot;        &quot;integer&quot;        &quot;integer&quot; 
+&gt;          s.start            s.end           evalue        bit.score 
+&gt;        &quot;integer&quot;        &quot;integer&quot;        &quot;numeric&quot;        &quot;numeric&quot; 
+&gt;           qseqid              sgi             sacc          saccver 
+&gt;        &quot;integer&quot;        &quot;integer&quot;      &quot;character&quot;      &quot;character&quot; 
+&gt;          staxids 
+&gt;        &quot;integer&quot;
+</code></pre>
+
+<p>We can clean up the working space form the data.frames datos1 and datos2.</p>
+
+<pre><code class="r">rm(datos1, datos2)
+ls()
+</code></pre>
+
+<pre><code>&gt; [1] &quot;base&quot;   &quot;bases&quot;  &quot;counts&quot; &quot;datos&quot;  &quot;ids&quot;    &quot;suma&quot;   &quot;touse&quot;  &quot;unicos&quot;
+</code></pre>
+
+<p>Doing this we avoid being confused with all data.frames.
+but we also let some ram memory free.
+To clear the memory cache we can use the command:</p>
+
+<pre><code class="r">gc()
+</code></pre>
+
+<pre><code>&gt;          used (Mb) gc trigger (Mb) max used (Mb)
+&gt; Ncells 159774  8.6     350000 18.7   305762 16.4
+&gt; Vcells 400073  3.1     905753  7.0   905744  7.0
+</code></pre>
+
+<h2>Get the Best Hits</h2>
+
+<p>Observe that all e-values are under certain predefined threshold</p>
+
+<pre><code class="r">summary(datos[, &quot;evalue&quot;])
+</code></pre>
+
+<pre><code>&gt;    Min. 1st Qu.  Median    Mean 3rd Qu.    Max. 
+&gt;   0e+00   0e+00   0e+00   5e-07   0e+00   4e-04
+</code></pre>
+
+<p>in this case</p>
+
+<pre><code class="r">4e-04
+</code></pre>
+
+<pre><code>&gt; [1] 4e-04
+</code></pre>
+
+<p>Then the <strong>best hit</strong> is the one with the maximum <strong>bit score</strong>.
+Generally the BLAST results are ordered, but we can test it:</p>
+
+<pre><code class="r">for (uni in unicos) {
+    touse &lt;- datos$queryID == uni
+    # print (max (datos[touse, &#39;bit.score&#39;]) == datos[touse, &#39;bit.score&#39;][1]) #
+    # the first bit.score is the maximum
+    if (max(datos[touse, &quot;bit.score&quot;]) != datos[touse, &quot;bit.score&quot;][1]) 
+        stop(&quot;PROBLEM&quot;)  # the stop should not be executed
+}
+</code></pre>
+
+<p>In the case that we needed to rearrange the rows we could do:</p>
+
+<pre><code class="r">## orden &lt;- order (datos$queryID, datos$bit.score, decreasing = TRUE) ## THIS
+## LINE DEFINES THE ORDER orden[1:3] datos &lt;- datos[orden,] ## THIS LINE
+## REARRANGES THE ROWS OF THE data.frame
+</code></pre>
+
+<p>Now that we know that our data.frame is ordered,
+we can simply select the first row for each of the sequence identifiers.
+The function <code>duplicated</code> may help. </p>
+
+<pre><code class="r">dup &lt;- duplicated(datos[, &quot;queryID&quot;])
+table(dup)
+</code></pre>
+
+<pre><code>&gt; dup
+&gt; FALSE  TRUE 
+&gt;   293 10481
+</code></pre>
+
+<p>So we keep the <strong>not</strong> duplicated rows:</p>
+
+<pre><code class="r">datos &lt;- datos[!dup, ]
+dim(datos)
+</code></pre>
+
+<pre><code>&gt; [1] 293  17
+</code></pre>
+
+<p>And now we can compute the counts of each of the species</p>
+
+<pre><code class="r">sort(table(datos[, &quot;staxids&quot;]))
+</code></pre>
+
+<pre><code>&gt; 
+&gt; 10116 59463 79684  9606  7955 10090 
+&gt;     1     1     2     6    24   259
+</code></pre>
+
+<p>in percentages</p>
+
+<pre><code class="r">100 * sort(table(datos[, &quot;staxids&quot;]))/nrow(datos)
+</code></pre>
+
+<pre><code>&gt; 
+&gt;   10116   59463   79684    9606    7955   10090 
+&gt;  0.3413  0.3413  0.6826  2.0478  8.1911 88.3959
+</code></pre>
+
+<p>So the most common species is 10090</p>
+
+<hr/>
+
+</body>
+
+</html>
