@@ -1,0 +1,319 @@
+
+R version 3.1.0 (2014-04-10) -- "Spring Dance"
+Copyright (C) 2014 The R Foundation for Statistical Computing
+Platform: x86_64-unknown-linux-gnu (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> ##microarray_analysis.r
+> ##2014-07-15 dmontaner@cipf.es
+> ##Celegans microarray data analysis
+> ##We explore data from the series GSE38196 of the GEO database (fyestp://ftp.ncbi.nlm.nih.gov/geo)
+> 
+> ## CLEAN THE WORKING ENVIRONMENT
+> rm (list = ls ())
+> options (width = 200)
+> 
+> 
+> ## READ DATA
+> setwd ("datos")
+> dir  ()
+[1] "GSE38196_series_matrix.txt"
+> 
+> ls ()
+character(0)
+> 
+> datos <- read.table (file = "GSE38196_series_matrix.txt", header = TRUE, comment.char = "!", as.is = TRUE)
+> ls ()
+[1] "datos"
+> class (datos)
+[1] "data.frame"
+> dim (datos)
+[1] 22625    13
+> datos[1:3,]
+       ID_REF GSM936472 GSM936473 GSM936474 GSM936475 GSM936476 GSM936477 GSM936478 GSM936479 GSM936480 GSM936481 GSM936482 GSM936483
+1 171720_x_at   603.233   695.368   551.187   687.085    410.50   726.952   404.556   714.383   655.514   482.524   393.286   558.096
+2 171721_x_at   935.866  1256.920  1037.940   897.906   1068.29  1033.880  1423.970  1616.890  1015.120  1634.820  1008.170  1389.560
+3 171722_x_at  2333.190  3413.550  1700.690  1749.000   2451.28  1972.540  2114.720  1695.720  2281.740  2688.740  2229.700  1527.730
+> 
+> rownames (datos) <- datos[,1]
+> datos <- datos[,-1]
+> datos[1:3,]
+            GSM936472 GSM936473 GSM936474 GSM936475 GSM936476 GSM936477 GSM936478 GSM936479 GSM936480 GSM936481 GSM936482 GSM936483
+171720_x_at   603.233   695.368   551.187   687.085    410.50   726.952   404.556   714.383   655.514   482.524   393.286   558.096
+171721_x_at   935.866  1256.920  1037.940   897.906   1068.29  1033.880  1423.970  1616.890  1015.120  1634.820  1008.170  1389.560
+171722_x_at  2333.190  3413.550  1700.690  1749.000   2451.28  1972.540  2114.720  1695.720  2281.740  2688.740  2229.700  1527.730
+> 
+> ## ARRAY CLASS
+> clases <- read.table (file = "GSE38196_series_matrix.txt", skip = 38, nrows = 1, as.is = TRUE)
+> clases
+                           V1                  V2                  V3                       V4                       V5                  V6                  V7                       V8
+1 !Sample_characteristics_ch1 genotype: wild-type genotype: wild-type genotype: atfs-1(tm4525) genotype: atfs-1(tm4525) genotype: wild-type genotype: wild-type genotype: atfs-1(tm4525)
+                        V9                 V10                 V11                      V12                      V13
+1 genotype: atfs-1(tm4525) genotype: wild-type genotype: wild-type genotype: atfs-1(tm4525) genotype: atfs-1(tm4525)
+> clases <- unlist (clases)
+> clases
+                           V1                            V2                            V3                            V4                            V5                            V6 
+"!Sample_characteristics_ch1"         "genotype: wild-type"         "genotype: wild-type"    "genotype: atfs-1(tm4525)"    "genotype: atfs-1(tm4525)"         "genotype: wild-type" 
+                           V7                            V8                            V9                           V10                           V11                           V12 
+        "genotype: wild-type"    "genotype: atfs-1(tm4525)"    "genotype: atfs-1(tm4525)"         "genotype: wild-type"         "genotype: wild-type"    "genotype: atfs-1(tm4525)" 
+                          V13 
+   "genotype: atfs-1(tm4525)" 
+> clases <- clases[-1]
+> clases
+                        V2                         V3                         V4                         V5                         V6                         V7                         V8 
+     "genotype: wild-type"      "genotype: wild-type" "genotype: atfs-1(tm4525)" "genotype: atfs-1(tm4525)"      "genotype: wild-type"      "genotype: wild-type" "genotype: atfs-1(tm4525)" 
+                        V9                        V10                        V11                        V12                        V13 
+"genotype: atfs-1(tm4525)"      "genotype: wild-type"      "genotype: wild-type" "genotype: atfs-1(tm4525)" "genotype: atfs-1(tm4525)" 
+> 
+> length (clases)
+[1] 12
+> 
+> table (clases)
+clases
+genotype: atfs-1(tm4525)      genotype: wild-type 
+                       6                        6 
+> 
+> WT <- clases == "genotype: wild-type"
+> WT
+   V2    V3    V4    V5    V6    V7    V8    V9   V10   V11   V12   V13 
+ TRUE  TRUE FALSE FALSE  TRUE  TRUE FALSE FALSE  TRUE  TRUE FALSE FALSE 
+> 
+> names (WT) <- colnames (datos)
+> WT
+GSM936472 GSM936473 GSM936474 GSM936475 GSM936476 GSM936477 GSM936478 GSM936479 GSM936480 GSM936481 GSM936482 GSM936483 
+     TRUE      TRUE     FALSE     FALSE      TRUE      TRUE     FALSE     FALSE      TRUE      TRUE     FALSE     FALSE 
+> 
+> datos[1:3,]
+            GSM936472 GSM936473 GSM936474 GSM936475 GSM936476 GSM936477 GSM936478 GSM936479 GSM936480 GSM936481 GSM936482 GSM936483
+171720_x_at   603.233   695.368   551.187   687.085    410.50   726.952   404.556   714.383   655.514   482.524   393.286   558.096
+171721_x_at   935.866  1256.920  1037.940   897.906   1068.29  1033.880  1423.970  1616.890  1015.120  1634.820  1008.170  1389.560
+171722_x_at  2333.190  3413.550  1700.690  1749.000   2451.28  1972.540  2114.720  1695.720  2281.740  2688.740  2229.700  1527.730
+> 
+> ################################################################################
+> 
+> ## DATA EXPLORATION 
+> summary (datos)
+   GSM936472          GSM936473          GSM936474          GSM936475          GSM936476          GSM936477          GSM936478          GSM936479          GSM936480          GSM936481        
+ Min.   :    0.07   Min.   :    0.17   Min.   :    0.29   Min.   :    0.22   Min.   :    0.29   Min.   :    0.18   Min.   :    0.18   Min.   :    0.21   Min.   :    0.27   Min.   :    0.203  
+ 1st Qu.:   33.50   1st Qu.:   36.62   1st Qu.:   35.51   1st Qu.:   31.90   1st Qu.:   28.54   1st Qu.:   31.40   1st Qu.:   31.05   1st Qu.:   33.61   1st Qu.:   38.34   1st Qu.:   28.551  
+ Median :  138.17   Median :  132.96   Median :  155.51   Median :  149.23   Median :  128.29   Median :  138.24   Median :  158.82   Median :  148.66   Median :  150.29   Median :  111.863  
+ Mean   :  868.86   Mean   :  863.27   Mean   :  854.56   Mean   :  830.11   Mean   :  805.82   Mean   :  826.05   Mean   :  781.23   Mean   :  832.30   Mean   :  876.72   Mean   :  743.065  
+ 3rd Qu.:  526.74   3rd Qu.:  498.62   3rd Qu.:  546.80   3rd Qu.:  532.16   3rd Qu.:  554.25   3rd Qu.:  548.46   3rd Qu.:  558.43   3rd Qu.:  528.56   3rd Qu.:  524.99   3rd Qu.:  597.390  
+ Max.   :57915.00   Max.   :60650.60   Max.   :50529.50   Max.   :44277.60   Max.   :36150.00   Max.   :44282.90   Max.   :31942.80   Max.   :44580.00   Max.   :55039.50   Max.   :28895.100  
+   GSM936482           GSM936483       
+ Min.   :    0.043   Min.   :    0.20  
+ 1st Qu.:   25.992   1st Qu.:   31.14  
+ Median :  139.336   Median :  149.61  
+ Mean   :  734.114   Mean   :  784.30  
+ 3rd Qu.:  584.573   3rd Qu.:  572.20  
+ Max.   :24461.100   Max.   :34426.10  
+> 
+> boxplot (datos)
+> boxplot (datos, las = 3)
+> boxplot (datos, las = 3, log = "y")
+> 
+> color <- rep ("red", times = 12)
+> color
+ [1] "red" "red" "red" "red" "red" "red" "red" "red" "red" "red" "red" "red"
+> color[WT]
+[1] "red" "red" "red" "red" "red" "red"
+> color[WT] <- "blue"
+> color
+ [1] "blue" "blue" "red"  "red"  "blue" "blue" "red"  "red"  "blue" "blue" "red"  "red" 
+> 
+> cbind (WT, color)
+          WT      color 
+GSM936472 "TRUE"  "blue"
+GSM936473 "TRUE"  "blue"
+GSM936474 "FALSE" "red" 
+GSM936475 "FALSE" "red" 
+GSM936476 "TRUE"  "blue"
+GSM936477 "TRUE"  "blue"
+GSM936478 "FALSE" "red" 
+GSM936479 "FALSE" "red" 
+GSM936480 "TRUE"  "blue"
+GSM936481 "TRUE"  "blue"
+GSM936482 "FALSE" "red" 
+GSM936483 "FALSE" "red" 
+> 
+> boxplot (datos, las = 3, log = "y", col = color)
+> 
+> hist (datos[,1])
+> hist (log (datos[,1]))
+> 
+> ################################################################################
+> 
+> ## DATA ANALYSIS: differential expression
+> 
+> WT
+GSM936472 GSM936473 GSM936474 GSM936475 GSM936476 GSM936477 GSM936478 GSM936479 GSM936480 GSM936481 GSM936482 GSM936483 
+     TRUE      TRUE     FALSE     FALSE      TRUE      TRUE     FALSE     FALSE      TRUE      TRUE     FALSE     FALSE 
+> !WT
+GSM936472 GSM936473 GSM936474 GSM936475 GSM936476 GSM936477 GSM936478 GSM936479 GSM936480 GSM936481 GSM936482 GSM936483 
+    FALSE     FALSE      TRUE      TRUE     FALSE     FALSE      TRUE      TRUE     FALSE     FALSE      TRUE      TRUE 
+> 
+> med.WT <- rowMeans (datos[,WT])
+> med.MU <- rowMeans (datos[,!WT])
+> 
+> class (med.WT)
+[1] "numeric"
+> 
+> med.WT[1:3]
+171720_x_at 171721_x_at 171722_x_at 
+   595.6818   1157.4827   2523.5067 
+> med.MU[1:3]
+171720_x_at 171721_x_at 171722_x_at 
+   551.4322   1229.0727   1836.2600 
+> 
+> table (names (med.WT) == rownames (datos))
+
+ TRUE 
+22625 
+> 
+> plot (med.WT, med.MU)
+> 
+> fold.change <- med.MU / med.WT
+> fold.change[1:3]
+171720_x_at 171721_x_at 171722_x_at 
+  0.9257159   1.0618497   0.7276620 
+> 
+> summary (fold.change)
+    Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
+ 0.01356  0.78210  0.93130  1.06400  1.15500 13.21000 
+> 
+> boxplot (fold.change)
+> abline (h = 0, col = "blue")
+> 
+> log.fold.change <- log (fold.change)
+> log.fold.change[1:3]
+171720_x_at 171721_x_at 171722_x_at 
+-0.07718785  0.06001242 -0.31791857 
+> 
+> summary (log.fold.change)
+    Min.  1st Qu.   Median     Mean  3rd Qu.     Max. 
+-4.30100 -0.24580 -0.07121 -0.03545  0.14410  2.58100 
+> 
+> boxplot (log.fold.change)
+> abline (h = 0, col = "blue")
+> 
+> 
+> ### DIFFERENTIALLY EXPRESSED GENES
+> boxplot (log.fold.change)
+> abline (h = 0, col = "blue")
+> abline (h = c(-2, 2), col = "red")
+> 
+> es.up   <- log.fold.change >  2
+> es.down <- log.fold.change < -2
+> 
+> es.up[1:3]
+171720_x_at 171721_x_at 171722_x_at 
+      FALSE       FALSE       FALSE 
+> 
+> table (es.up, es.down)
+       es.down
+es.up   FALSE  TRUE
+  FALSE 22607    12
+  TRUE      6     0
+> 
+> rownames (datos)[es.up]
+[1] "176805_at" "177985_at" "178538_at" "180205_at" "185121_at" "189139_at"
+> rownames (datos)[es.down]
+ [1] "173398_s_at" "179324_at"   "180773_at"   "182038_at"   "182310_at"   "185275_at"   "185577_s_at" "186180_at"   "186991_at"   "189218_at"   "189556_at"   "190963_at"  
+> 
+> datos[es.up,]
+          GSM936472 GSM936473 GSM936474 GSM936475 GSM936476 GSM936477 GSM936478  GSM936479 GSM936480 GSM936481 GSM936482 GSM936483
+176805_at  69.36620  42.07490  380.0660 512.85200  53.98870  40.21480  895.4220 1736.45000 220.12400  38.35460   86.9546 205.03200
+177985_at   3.34459   2.11371   74.0010   3.34024   2.30902   6.73892   74.4599    8.08676   2.87678   2.14362   68.3642   1.28189
+178538_at   4.99733   6.41359  658.2020 617.49700 107.95200  12.12870  817.1290 1246.57000 244.65200  34.57370  148.0450 303.83800
+180205_at   5.19228  25.62060  160.9650 100.82800  17.71650   7.69953  130.2550   80.97840   2.74444   3.51540  165.9040 186.37000
+185121_at   4.74057   5.75276   52.8707  10.06280   4.90128   4.10507   54.0364   17.22430   3.45537   3.26903   60.8589   2.47546
+189139_at   3.47820   2.71511   54.4699  43.39540   8.89840   4.07206   54.7520   46.21450   9.39010   1.83876   42.2565  29.51950
+> datos[es.down,]
+            GSM936472  GSM936473 GSM936474  GSM936475 GSM936476  GSM936477 GSM936478  GSM936479 GSM936480 GSM936481 GSM936482  GSM936483
+173398_s_at  30.89700   46.58960 16.757100   6.315980  23.95780  236.24900   4.00737   8.971780   8.41035   38.7125  1.587040   3.350740
+179324_at     5.71772 1109.58000 13.932200   1.294650  29.85840 1354.89000   2.29749   4.240070   5.81861  551.6210  1.495130  18.189700
+180773_at   110.17400  632.10900 21.294500  53.369200  56.68640 1405.27000   4.83980  42.886700  68.52660  287.9290 35.591800  21.037200
+182038_at     1.27899    2.99352  0.960242   0.742516   9.67284    4.66776   2.30982   1.319230  11.08780   33.6119  1.862550   1.132420
+182310_at     1.36855    5.55849  1.437820   1.116630   1.96935    2.06866   1.22706   0.677056  21.25190   38.2662  1.327640   2.324790
+185275_at    17.91990 2027.60000 36.416300 209.119000  31.04120 1325.29000   6.63173 108.905000  53.80410  913.2830 26.675400 110.718000
+185577_s_at   2.03786    1.45137  2.334610   3.638600 102.92800   85.91940   1.09471   9.768540   6.72939  302.7800 36.944800   1.648550
+186180_at    39.42080  254.38000  5.822580  22.614900  56.72070  582.07200  18.32980  34.452000  20.26080  426.4110  3.159690  19.183700
+186991_at    30.63190  174.38900  2.368830   2.512320  41.79890  264.18500   1.83221  41.419900   5.71090  245.0420  2.161740   2.869180
+189218_at    42.59680 2596.85000 25.163300 149.124000  19.24040 5900.56000  30.47840 276.449000  27.89360 3204.3600 12.988800 157.950000
+189556_at     3.83997   31.28250  1.085360  13.688900  15.32940  224.49100   2.68030  10.995100   7.01013  119.1970  9.319370   3.291540
+190963_at     2.46580    5.26222  2.751130   2.620630  15.74570   22.99400   2.02320   1.882930  37.82510   15.3318  0.627905   0.940343
+> 
+> 
+> boxplot (datos, las = 3, col = color, log = "y")
+> 
+> rownames (datos)[es.up]
+[1] "176805_at" "177985_at" "178538_at" "180205_at" "185121_at" "189139_at"
+> rownames (datos)[es.up][1]
+[1] "176805_at"
+> 
+> id <- rownames (datos)[es.up][1]
+> id
+[1] "176805_at"
+> 
+> log (datos[id,])
+          GSM936472 GSM936473 GSM936474 GSM936475 GSM936476 GSM936477 GSM936478 GSM936479 GSM936480 GSM936481 GSM936482 GSM936483
+176805_at    4.2394  3.739451  5.940345  6.239987  3.988775  3.694235  6.797295  7.459598  5.394191  3.646874  4.465386  5.323166
+> 
+> lines (1:12, log (datos[id,]))
+> 
+> id <- rownames (datos)[es.down][1]
+> id
+[1] "173398_s_at"
+> 
+> lines (1:12, log (datos[id,]), col = "blue")
+> 
+> 
+> 
+> ### LOOP
+> 
+> ids.up <- rownames (datos)[es.up]
+> ids.down <- rownames (datos)[es.down]
+> 
+> ids.up
+[1] "176805_at" "177985_at" "178538_at" "180205_at" "185121_at" "189139_at"
+> ids.down
+ [1] "173398_s_at" "179324_at"   "180773_at"   "182038_at"   "182310_at"   "185275_at"   "185577_s_at" "186180_at"   "186991_at"   "189218_at"   "189556_at"   "190963_at"  
+> 
+> for (id in ids.up) {
++     print (toupper (id))
++ }
+[1] "176805_AT"
+[1] "177985_AT"
+[1] "178538_AT"
+[1] "180205_AT"
+[1] "185121_AT"
+[1] "189139_AT"
+> 
+> 
+>  
+> boxplot (datos, las = 3, col = color, log = "y")
+> 
+> for (id in ids.up) {
++     lines (1:12, log (datos[id,]), col = "red")
++ }
+> 
+> for (id in ids.down) {
++     lines (1:12, log (datos[id,]), col = "blue")
++ }
+> 
+> proc.time()
+   user  system elapsed 
+  2.366   0.016   2.370 
