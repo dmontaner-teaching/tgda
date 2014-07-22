@@ -1,0 +1,374 @@
+
+R version 3.1.0 (2014-04-10) -- "Spring Dance"
+Copyright (C) 2014 The R Foundation for Statistical Computing
+Platform: x86_64-unknown-linux-gnu (64-bit)
+
+R is free software and comes with ABSOLUTELY NO WARRANTY.
+You are welcome to redistribute it under certain conditions.
+Type 'license()' or 'licence()' for distribution details.
+
+  Natural language support but running in an English locale
+
+R is a collaborative project with many contributors.
+Type 'contributors()' for more information and
+'citation()' on how to cite R or R packages in publications.
+
+Type 'demo()' for some demos, 'help()' for on-line help, or
+'help.start()' for an HTML browser interface to help.
+Type 'q()' to quit R.
+
+> ##analysis_western.r
+> ##2014-07-21 dmontaner@cipf.es
+> ##Statistical analysis of Western blot data
+> 
+> 
+> ## CLEAN THE WORKING ENVIRONMENT
+> rm (list = ls ())
+> options (width = 200)
+> 
+> 
+> ## READ DATA
+> setwd ("datos")
+> dir  ()
+ [1] "A- Control de Carga-ERK.tif"           "A- p-ERK.tif"                          "B- BAX.tif"                            "B-Control de Carga- GAPDH.tif"        
+ [5] "C- pJNK.tif"                           "C-Control de Carga- JNK.tif"           "csvs.zip"                              "cuantificaciones_modificadas_bax.csv" 
+ [9] "cuantificaciones_modificadas_perk.csv" "cuantificaciones_modificadas_pjnk.csv" "cuantificaciones_modificadas.xlsx"     "cuantificaciones_originales.xlsx"     
+[13] "Rplots.pdf"                           
+> dir (pattern = ".csv")
+[1] "cuantificaciones_modificadas_bax.csv"  "cuantificaciones_modificadas_perk.csv" "cuantificaciones_modificadas_pjnk.csv"
+> 
+> ficheros <- dir (pattern = ".csv")
+> ficheros
+[1] "cuantificaciones_modificadas_bax.csv"  "cuantificaciones_modificadas_perk.csv" "cuantificaciones_modificadas_pjnk.csv"
+> 
+> ## this is an example of a loop
+> for (fi in ficheros) {
++     print (fi)
++     FI <- toupper (fi)
++     print (FI)
++ }
+[1] "cuantificaciones_modificadas_bax.csv"
+[1] "CUANTIFICACIONES_MODIFICADAS_BAX.CSV"
+[1] "cuantificaciones_modificadas_perk.csv"
+[1] "CUANTIFICACIONES_MODIFICADAS_PERK.CSV"
+[1] "cuantificaciones_modificadas_pjnk.csv"
+[1] "CUANTIFICACIONES_MODIFICADAS_PJNK.CSV"
+> 
+> ficheros
+[1] "cuantificaciones_modificadas_bax.csv"  "cuantificaciones_modificadas_perk.csv" "cuantificaciones_modificadas_pjnk.csv"
+> fi
+[1] "cuantificaciones_modificadas_pjnk.csv"
+> FI
+[1] "CUANTIFICACIONES_MODIFICADAS_PJNK.CSV"
+> 
+> ## we use a loop to congratulate to our ...fiend 100 times
+> variable.puntos <- ""
+> for (i in 1:100) {
++     variable.puntos <- paste (variable.puntos, ".", sep = "")
++     print (paste ("FELICIDADES", variable.puntos))
++ }
+[1] "FELICIDADES ."
+[1] "FELICIDADES .."
+[1] "FELICIDADES ..."
+[1] "FELICIDADES ...."
+[1] "FELICIDADES ....."
+[1] "FELICIDADES ......"
+[1] "FELICIDADES ......."
+[1] "FELICIDADES ........"
+[1] "FELICIDADES ........."
+[1] "FELICIDADES .........."
+[1] "FELICIDADES ..........."
+[1] "FELICIDADES ............"
+[1] "FELICIDADES ............."
+[1] "FELICIDADES .............."
+[1] "FELICIDADES ..............."
+[1] "FELICIDADES ................"
+[1] "FELICIDADES ................."
+[1] "FELICIDADES .................."
+[1] "FELICIDADES ..................."
+[1] "FELICIDADES ...................."
+[1] "FELICIDADES ....................."
+[1] "FELICIDADES ......................"
+[1] "FELICIDADES ......................."
+[1] "FELICIDADES ........................"
+[1] "FELICIDADES ........................."
+[1] "FELICIDADES .........................."
+[1] "FELICIDADES ..........................."
+[1] "FELICIDADES ............................"
+[1] "FELICIDADES ............................."
+[1] "FELICIDADES .............................."
+[1] "FELICIDADES ..............................."
+[1] "FELICIDADES ................................"
+[1] "FELICIDADES ................................."
+[1] "FELICIDADES .................................."
+[1] "FELICIDADES ..................................."
+[1] "FELICIDADES ...................................."
+[1] "FELICIDADES ....................................."
+[1] "FELICIDADES ......................................"
+[1] "FELICIDADES ......................................."
+[1] "FELICIDADES ........................................"
+[1] "FELICIDADES ........................................."
+[1] "FELICIDADES .........................................."
+[1] "FELICIDADES ..........................................."
+[1] "FELICIDADES ............................................"
+[1] "FELICIDADES ............................................."
+[1] "FELICIDADES .............................................."
+[1] "FELICIDADES ..............................................."
+[1] "FELICIDADES ................................................"
+[1] "FELICIDADES ................................................."
+[1] "FELICIDADES .................................................."
+[1] "FELICIDADES ..................................................."
+[1] "FELICIDADES ...................................................."
+[1] "FELICIDADES ....................................................."
+[1] "FELICIDADES ......................................................"
+[1] "FELICIDADES ......................................................."
+[1] "FELICIDADES ........................................................"
+[1] "FELICIDADES ........................................................."
+[1] "FELICIDADES .........................................................."
+[1] "FELICIDADES ..........................................................."
+[1] "FELICIDADES ............................................................"
+[1] "FELICIDADES ............................................................."
+[1] "FELICIDADES .............................................................."
+[1] "FELICIDADES ..............................................................."
+[1] "FELICIDADES ................................................................"
+[1] "FELICIDADES ................................................................."
+[1] "FELICIDADES .................................................................."
+[1] "FELICIDADES ..................................................................."
+[1] "FELICIDADES ...................................................................."
+[1] "FELICIDADES ....................................................................."
+[1] "FELICIDADES ......................................................................"
+[1] "FELICIDADES ......................................................................."
+[1] "FELICIDADES ........................................................................"
+[1] "FELICIDADES ........................................................................."
+[1] "FELICIDADES .........................................................................."
+[1] "FELICIDADES ..........................................................................."
+[1] "FELICIDADES ............................................................................"
+[1] "FELICIDADES ............................................................................."
+[1] "FELICIDADES .............................................................................."
+[1] "FELICIDADES ..............................................................................."
+[1] "FELICIDADES ................................................................................"
+[1] "FELICIDADES ................................................................................."
+[1] "FELICIDADES .................................................................................."
+[1] "FELICIDADES ..................................................................................."
+[1] "FELICIDADES ...................................................................................."
+[1] "FELICIDADES ....................................................................................."
+[1] "FELICIDADES ......................................................................................"
+[1] "FELICIDADES ......................................................................................."
+[1] "FELICIDADES ........................................................................................"
+[1] "FELICIDADES ........................................................................................."
+[1] "FELICIDADES .........................................................................................."
+[1] "FELICIDADES ..........................................................................................."
+[1] "FELICIDADES ............................................................................................"
+[1] "FELICIDADES ............................................................................................."
+[1] "FELICIDADES .............................................................................................."
+[1] "FELICIDADES ..............................................................................................."
+[1] "FELICIDADES ................................................................................................"
+[1] "FELICIDADES ................................................................................................."
+[1] "FELICIDADES .................................................................................................."
+[1] "FELICIDADES ..................................................................................................."
+[1] "FELICIDADES ...................................................................................................."
+> 
+> 
+> ## now that we know what a loop is we use it to read our data into a list
+> datos <- list ()
+> datos
+list()
+> for (fi in ficheros) {
++     print (fi)
++     datos[[fi]] <- read.csv (fi)
++ }
+[1] "cuantificaciones_modificadas_bax.csv"
+[1] "cuantificaciones_modificadas_perk.csv"
+[1] "cuantificaciones_modificadas_pjnk.csv"
+> datos
+$cuantificaciones_modificadas_bax.csv
+  ID PROTEINA ESTANDAR     RATIO   CLASE
+1  1 17311640 33785832 0.5123935 control
+2  2 15738832 29541397 0.5327721 control
+3  3 10208811 27854054 0.3665108 control
+4  4 19986782 28859175 0.6925625 control
+5  5 17666539 30662518 0.5761607 control
+6  6 23246589 31604347 0.7355504  etanol
+7  7 43878075 30991225 1.4158225  etanol
+8  8 25804004 27860933 0.9261716  etanol
+9  9 18443589 27237054 0.6771507  etanol
+
+$cuantificaciones_modificadas_perk.csv
+  ID PROTEINA ESTANDAR     RATIO   CLASE
+1  1  2745841 15534255 0.1767604 control
+2  2  9846175 29061347 0.3388066 control
+3  3 12047640 26511104 0.4544375 control
+4  4  7699175 13654125 0.5638717 control
+5  5 15736347 25313468 0.6216591  etanol
+6  6 36580711 28468640 1.2849476  etanol
+7  7 25436296 33435418 0.7607590  etanol
+8  8 30378246 32975832 0.9212276  etanol
+
+$cuantificaciones_modificadas_pjnk.csv
+  ID PROTEINA ESTANDAR     RATIO   CLASE
+1  1  2745841 15534255 0.1767604 control
+2  2  9846175 29061347 0.3388066 control
+3  3 12047640 26511104 0.4544375 control
+4  4  7699175 13654125 0.5638717 control
+5  5 15736347 25313468 0.6216591  etanol
+6  6 36580711 28468640 1.2849476  etanol
+7  7 25436296 33435418 0.7607590  etanol
+8  8 30378246 32975832 0.9212276  etanol
+
+> 
+> 
+> ## revise formats
+> class (datos)
+[1] "list"
+> names (datos)
+[1] "cuantificaciones_modificadas_bax.csv"  "cuantificaciones_modificadas_perk.csv" "cuantificaciones_modificadas_pjnk.csv"
+> length (datos)
+[1] 3
+> 
+> datos[[1]]
+  ID PROTEINA ESTANDAR     RATIO   CLASE
+1  1 17311640 33785832 0.5123935 control
+2  2 15738832 29541397 0.5327721 control
+3  3 10208811 27854054 0.3665108 control
+4  4 19986782 28859175 0.6925625 control
+5  5 17666539 30662518 0.5761607 control
+6  6 23246589 31604347 0.7355504  etanol
+7  7 43878075 30991225 1.4158225  etanol
+8  8 25804004 27860933 0.9261716  etanol
+9  9 18443589 27237054 0.6771507  etanol
+> datos[["cuantificaciones_modificadas_bax.csv"]]
+  ID PROTEINA ESTANDAR     RATIO   CLASE
+1  1 17311640 33785832 0.5123935 control
+2  2 15738832 29541397 0.5327721 control
+3  3 10208811 27854054 0.3665108 control
+4  4 19986782 28859175 0.6925625 control
+5  5 17666539 30662518 0.5761607 control
+6  6 23246589 31604347 0.7355504  etanol
+7  7 43878075 30991225 1.4158225  etanol
+8  8 25804004 27860933 0.9261716  etanol
+9  9 18443589 27237054 0.6771507  etanol
+> class (datos[[1]])
+[1] "data.frame"
+> dim (datos[[1]])
+[1] 9 5
+> 
+> for (fi in names (datos)) {
++     print (fi)
++     dat <- datos[[fi]]
++     print (class (dat))
++ }
+[1] "cuantificaciones_modificadas_bax.csv"
+[1] "data.frame"
+[1] "cuantificaciones_modificadas_perk.csv"
+[1] "data.frame"
+[1] "cuantificaciones_modificadas_pjnk.csv"
+[1] "data.frame"
+> 
+> ################################################################################
+> 
+> ## EXPLORE DATA
+> 
+> ## boxplot of one gene
+> boxplot (dat[,"RATIO"] ~ dat[,"CLASE"])
+> 
+> ## boxplot for all genes
+> par (mfrow = c(1, 3)) #this line indicates that 3 graphs are going to be plot
+> for (fi in names (datos)) {
++     print (fi)
++     dat <- datos[[fi]]
++     boxplot (dat[,"RATIO"] ~ dat[,"CLASE"])    
++ }
+[1] "cuantificaciones_modificadas_bax.csv"
+[1] "cuantificaciones_modificadas_perk.csv"
+[1] "cuantificaciones_modificadas_pjnk.csv"
+> 
+> ## include title
+> par (mfrow = c(1, 3)) #this line indicates that 3 graphs are going to be plot
+> for (fi in names (datos)) {
++     print (fi)
++     dat <- datos[[fi]]
++     boxplot (dat[,"RATIO"] ~ dat[,"CLASE"], main = fi)    
++ }
+[1] "cuantificaciones_modificadas_bax.csv"
+[1] "cuantificaciones_modificadas_perk.csv"
+[1] "cuantificaciones_modificadas_pjnk.csv"
+> 
+> ## work in LOG scale
+> par (mfrow = c(1, 3)) #this line indicates that 3 graphs are going to be plot
+> for (fi in names (datos)) {
++     print (fi)
++     dat <- datos[[fi]]
++     boxplot (log (dat[,"RATIO"]) ~ dat[,"CLASE"], main = fi)    
++ }
+[1] "cuantificaciones_modificadas_bax.csv"
+[1] "cuantificaciones_modificadas_perk.csv"
+[1] "cuantificaciones_modificadas_pjnk.csv"
+> 
+> 
+> ################################################################################
+> 
+> ## HYPOTHESIS TESTING
+> 
+> t.test (log (dat[,"RATIO"]) ~ dat[,"CLASE"])
+
+	Welch Two Sample t-test
+
+data:  log(dat[, "RATIO"]) by dat[, "CLASE"]
+t = -3.0407, df = 4.973, p-value = 0.02893
+alternative hypothesis: true difference in means is not equal to 0
+95 percent confidence interval:
+ -1.6606367 -0.1377519
+sample estimates:
+mean in group control  mean in group etanol 
+           -1.0442274            -0.1450331 
+
+> 
+> for (fi in names (datos)) {
++     print (fi)
++     dat <- datos[[fi]]
++     print (t.test (log (dat[,"RATIO"]) ~ dat[,"CLASE"]))
++ }
+[1] "cuantificaciones_modificadas_bax.csv"
+
+	Welch Two Sample t-test
+
+data:  log(dat[, "RATIO"]) by dat[, "CLASE"]
+t = -2.7553, df = 5.223, p-value = 0.03824
+alternative hypothesis: true difference in means is not equal to 0
+95 percent confidence interval:
+ -1.03290957 -0.04240969
+sample estimates:
+mean in group control  mean in group etanol 
+           -0.6441553            -0.1064957 
+
+[1] "cuantificaciones_modificadas_perk.csv"
+
+	Welch Two Sample t-test
+
+data:  log(dat[, "RATIO"]) by dat[, "CLASE"]
+t = -3.0407, df = 4.973, p-value = 0.02893
+alternative hypothesis: true difference in means is not equal to 0
+95 percent confidence interval:
+ -1.6606367 -0.1377519
+sample estimates:
+mean in group control  mean in group etanol 
+           -1.0442274            -0.1450331 
+
+[1] "cuantificaciones_modificadas_pjnk.csv"
+
+	Welch Two Sample t-test
+
+data:  log(dat[, "RATIO"]) by dat[, "CLASE"]
+t = -3.0407, df = 4.973, p-value = 0.02893
+alternative hypothesis: true difference in means is not equal to 0
+95 percent confidence interval:
+ -1.6606367 -0.1377519
+sample estimates:
+mean in group control  mean in group etanol 
+           -1.0442274            -0.1450331 
+
+> 
+> 
+> proc.time()
+   user  system elapsed 
+  0.252   0.014   0.259 
